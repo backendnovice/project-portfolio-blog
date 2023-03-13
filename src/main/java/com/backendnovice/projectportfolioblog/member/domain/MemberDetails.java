@@ -1,12 +1,14 @@
 package com.backendnovice.projectportfolioblog.member.domain;
 
+import com.backendnovice.projectportfolioblog.global.enums.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * @name   : MemberDetails
@@ -17,6 +19,7 @@ import java.util.Collections;
 
 @Getter
 @Builder
+@NoArgsConstructor
 public class MemberDetails implements UserDetails {
     
     private MemberEntity member;
@@ -27,7 +30,13 @@ public class MemberDetails implements UserDetails {
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(member.getRole().toString()));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        
+        System.out.println(member.toString());
+        
+        authorities.add(new SimpleGrantedAuthority(Role.ROLE_USER.name()));
+        
+        return authorities;
     }
     
     @Override

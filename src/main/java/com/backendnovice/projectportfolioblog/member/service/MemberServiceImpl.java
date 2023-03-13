@@ -1,8 +1,15 @@
 package com.backendnovice.projectportfolioblog.member.service;
 
+import com.backendnovice.projectportfolioblog.member.domain.MemberDetails;
+import com.backendnovice.projectportfolioblog.member.domain.MemberEntity;
 import com.backendnovice.projectportfolioblog.member.dto.MemberDTO;
 import com.backendnovice.projectportfolioblog.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +23,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     
-    private final MemberRepository memberRepository;
-    
-    private final PasswordEncoder passwordEncoder;
-    
-    private final MemberDetailsService memberDetailsService;
-    
+    @Autowired
+    private MemberRepository memberRepository;
     
     @Override
     public void memberRegister(MemberDTO memberDTO) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         
         memberRepository.save(dtoToEntity(memberDTO));

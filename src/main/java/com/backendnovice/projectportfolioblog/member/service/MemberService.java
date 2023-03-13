@@ -1,5 +1,6 @@
 package com.backendnovice.projectportfolioblog.member.service;
 
+import com.backendnovice.projectportfolioblog.global.enums.Role;
 import com.backendnovice.projectportfolioblog.member.domain.MemberEntity;
 import com.backendnovice.projectportfolioblog.member.dto.MemberDTO;
 
@@ -20,6 +21,7 @@ public interface MemberService {
                 .password(memberDTO.getPassword())
                 .name(memberDTO.getName())
                 .phone(memberDTO.getPhone())
+                .role(Role.ROLE_USER)
                 .build();
         
         return member;

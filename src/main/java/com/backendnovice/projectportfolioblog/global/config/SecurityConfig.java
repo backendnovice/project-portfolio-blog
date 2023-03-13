@@ -1,5 +1,6 @@
 package com.backendnovice.projectportfolioblog.global.config;
 
+import com.backendnovice.projectportfolioblog.global.enums.Role;
 import com.backendnovice.projectportfolioblog.member.service.MemberDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -32,24 +34,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .httpBasic().disable()
-                .csrf().disable();
-        
-        httpSecurity
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/board/**").hasRole("ROLE_USER")
-                        .requestMatchers("/admin/**").hasRole("ROLE_ADMIN")
-                        .requestMatchers("/", "/member/**").permitAll()
+                        .requestMatchers("/blog/**").hasRole("USER")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/member/**").permitAll()
                 )
                 .formLogin((login) -> login
                         .loginPage("/member/login")
-                        .defaultSuccessUrl("/")
+                        .loginProcessingUrl("/member/login")
+                        .defaultSuccessUrl("/blog/home")
+                        .failureUrl("/member/login")
                         .permitAll()
                 )
                 .logout((logout) -> logout
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/member/logout")
                         .permitAll()
                 );
+    
+        httpSecurity
+                .httpBasic().disable()
+                .csrf().disable();
         
         return httpSecurity.build();
     }
@@ -64,4 +68,8 @@ public class SecurityConfig {
         return provider;
     }
     
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**");
+    }
 }
