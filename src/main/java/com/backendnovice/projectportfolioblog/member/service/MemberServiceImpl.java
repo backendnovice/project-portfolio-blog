@@ -26,12 +26,23 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     private MemberRepository memberRepository;
     
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
     @Override
     public void memberRegister(MemberDTO memberDTO) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         
         memberRepository.save(dtoToEntity(memberDTO));
     }
     
+    @Override
+    public boolean memberValidate(MemberDTO memberDTO) {
+        MemberEntity member = memberRepository.findByEmail(memberDTO.getEmail()).get();
+        
+        if(passwordEncoder.matches(memberDTO.getPassword(), member.getPassword()))
+            return true;
+        else
+            return false;
+    }
 }

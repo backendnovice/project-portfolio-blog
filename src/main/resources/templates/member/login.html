@@ -1,29 +1,63 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-    <script th:src="@{/js/jquery-3.6.4.min.js}"></script>
-    <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script th:src="@{/css/bootstrap.min.css}"></script>
+<head th:replace="~{layout/common :: html-head}">
+    <title>Login</title>
 </head>
 <body>
     <div class="container">
-        <form th:method="post" th:action="@{~/member/login}">
+        <form class="form-login" name="form-login" th:method="post" th:action="@{~/member/login}">
             <div>
                 <label for="email">Email</label>
                 <input type="email" id="email" name="username" placeholder="example@email.com">
-                <span class="result_email" hidden></span>
             </div>
             <div>
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="password">
-                <span class="result-password" hidden></span>
             </div>
+                <span class="text-danger"></span>
             <div>
-                <button type="submit">Register</button>
+                <button type="button" id="btn-submit">Register</button>
             </div>
         </form>
     </div>
+
+    <script>
+        $(function () {
+            $('#btn-submit').click(function() {
+                validate();
+            });
+        });
+
+        function validate() {
+            let email = $('#email').val()
+            let password = $('#password').val();
+
+            if(!email || !password) {
+                $('.text-danger').text('Null ID or Password. Please try again.');
+            }else {
+                $.ajax({
+                    type: 'post',
+                    url: '/member/api/valid',
+                    data: JSON.stringify({
+                        email: email,
+                        password: password
+                    }),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function (response) {
+                        if(response.isValid) {
+                            $('.form-login').submit();
+                        }else {
+                            $('.text-danger').text('Invalid ID or Password. Please try again.');
+                        }
+                    },
+                    error: function () {
+                        $('.text-danger').text('Invalid ID or Password. Please try again.');
+                    }
+                });
+            }
+            return false;
+        }
+    </script>
 </body>
 </html>
