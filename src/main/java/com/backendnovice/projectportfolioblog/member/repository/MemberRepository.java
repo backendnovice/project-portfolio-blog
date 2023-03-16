@@ -21,4 +21,6 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     
     Optional<MemberEntity> findByEmailAndPassword(@Param("m_email") String email, @Param("m_password") String password);
     
+    boolean existsByEmail(@Param("m_email") String email);
+    
 }

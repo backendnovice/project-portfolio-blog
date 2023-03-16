@@ -5,29 +5,87 @@
 </head>
 <body>
     <div class="container">
-        <form th:method="post" th:action="@{~/member/register}">
+        <form th:method="post" name="form-register" th:action="@{~/member/register}">
             <div>
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="example@email.com">
-                <span class="result_email" hidden></span>
+                <span class="text-danger" id="error-email" hidden></span>
             </div>
             <div>
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="password">
-                <span class="result-password" hidden></span>
+                <span class="text-danger" id="error-password" hidden>Null Password.</span>
             </div>
             <div>
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" placeholder="Name">
+                <span class="text-danger" id="error-name" hidden>Null Name.</span>
             </div>
             <div>
                 <label for="phone">Phone</label>
                 <input type="tel" id="phone" name="phone" placeholder="enter without '-'" minlength="10" maxlength="11">
+                <span class="text-danger" id="error-phone" hidden>Null Phone.</span>
             </div>
             <div>
-                <button type="submit">Register</button>
+                <button type="button" id="btn-submit">Register</button>
             </div>
         </form>
     </div>
+
+    <script>
+        $(function () {
+            $('#btn-submit').click(function() {
+                validate();
+            });
+        });
+
+        function validate() {
+            let email = $('#email').val();
+            let password = $('#password').val();
+            let name = $('#name').val();
+            let phone = $('#error-phone').val();
+
+            if(!email) {
+                $('#error-email').text('Null Email.').show();
+            }else {
+                $.ajax({
+                    type: 'post',
+                    url: '/member/api/register',
+                    data: JSON.stringify({
+                        email: email
+                    }),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function (response) {
+                        if(response.isExists) {
+                            $('.form-register').submit();
+                        }else {
+                            $('#error-email').text('Email already Exists. Please try another Email.');
+                        }
+                    },
+                    error: function () {
+                        console.log('AJAX Error...');
+                    }
+                });
+            }
+            return false;
+
+            if(!password) {
+                $('#error-password').show();
+            }else {
+                $('#error-password').hide();
+            }
+            if(!name) {
+                $('#error-name').show();
+            }else {
+                $('#error-name').hide();
+            }
+            if(!phone) {
+                $('#error-phone').show();
+            }else {
+                $('#error-phone').hide();
+            }
+        }
+    </script>
 </body>
 </html>

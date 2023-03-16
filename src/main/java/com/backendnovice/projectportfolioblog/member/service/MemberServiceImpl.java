@@ -37,12 +37,19 @@ public class MemberServiceImpl implements MemberService {
     }
     
     @Override
-    public boolean memberValidate(MemberDTO memberDTO) {
+    public boolean validateLoginAPI(MemberDTO memberDTO) {
         MemberEntity member = memberRepository.findByEmail(memberDTO.getEmail()).get();
         
         if(passwordEncoder.matches(memberDTO.getPassword(), member.getPassword()))
             return true;
         else
             return false;
+    }
+    
+    @Override
+    public boolean validateRegisterAPI(MemberDTO memberDTO) {
+        boolean isExists = memberRepository.existsByEmail(memberDTO.getEmail());
+        
+        return !isExists;
     }
 }

@@ -19,13 +19,24 @@ public class MemberRestController {
     @Autowired
     private MemberService memberService;
     
-    @PostMapping("/valid")
-    public ResponseEntity<Map<String, Boolean>> loginProcess(@RequestBody MemberDTO memberDTO) {
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Boolean>> provideLoginAPI(@RequestBody MemberDTO memberDTO) {
         Map<String, Boolean> response = new HashMap<>();
     
-        boolean isValid = memberService.memberValidate(memberDTO);
+        boolean isValid = memberService.validateLoginAPI(memberDTO);
         
         response.put("isValid", isValid);
+        
+        return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, Boolean>> provideRegisterAPI(@RequestBody MemberDTO memberDTO) {
+        Map<String, Boolean> response = new HashMap<>();
+        
+        boolean isExists = memberService.validateRegisterAPI(memberDTO);
+        
+        response.put("isExists", isExists);
         
         return ResponseEntity.ok(response);
     }

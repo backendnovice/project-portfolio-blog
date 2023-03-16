@@ -15,7 +15,10 @@ public interface MemberService {
     
     void memberRegister(MemberDTO memberDTO);
     
-    boolean memberValidate(MemberDTO memberDTO);
+    boolean validateLoginAPI(MemberDTO memberDTO);
+    
+    boolean validateRegisterAPI(MemberDTO memberDTO);
+    
     default MemberEntity dtoToEntity(MemberDTO memberDTO) {
         MemberEntity member = MemberEntity.builder()
                 .email(memberDTO.getEmail())
