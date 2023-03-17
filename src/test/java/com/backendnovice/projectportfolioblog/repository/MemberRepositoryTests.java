@@ -47,4 +47,19 @@ public class MemberRepositoryTests {
             System.out.println("Bad Password");
     }
     
+    @Test
+    public void validateRegisterTest() {
+        MemberDTO correct = MemberDTO.builder()
+                .email("member@email.com").build();
+        
+        MemberDTO incorrect = MemberDTO.builder()
+                .email("memberFail@email.com").build();
+        
+        boolean isExist = memberRepository.existsByEmail(correct.getEmail());
+        System.out.println(isExist);
+    
+        isExist = memberRepository.existsByEmail(incorrect.getEmail());
+        System.out.println(isExist);
+    }
+    
 }
