@@ -5,7 +5,7 @@
 </head>
 <body>
     <div class="container">
-        <form th:method="post" name="form-register" th:action="@{~/member/register}">
+        <form th:method="post" class="form-register" th:action="@{~/member/register}">
             <div>
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="example@email.com">
@@ -43,11 +43,40 @@
             let email = $('#email').val();
             let password = $('#password').val();
             let name = $('#name').val();
-            let phone = $('#error-phone').val();
+            let phone = $('#phone').val();
+
+            let hasError = false;
 
             if(!email) {
-                $('#error-email').text('Null Email.').show();
+                $('#error-email').text('Null Email.').removeAttr('hidden');
+                hasError = true;
             }else {
+                $('#error-email').text('Null Email.').attr('hidden');
+            }
+
+
+            if(!password) {
+                $('#error-password').removeAttr('hidden');
+                hasError = true;
+            }else {
+                $('#error-password').hide().attr('hidden');
+            }
+
+            if(!name) {
+                $('#error-name').removeAttr('hidden');
+                hasError = true;
+            }else {
+                $('#error-name').hide().attr('hidden');
+            }
+
+            if(!phone) {
+                $('#error-phone').removeAttr('hidden');
+                hasError = true;
+            }else {
+                $('#error-phone').hide().attr('hidden');
+            }
+
+            if(!hasError) {
                 $.ajax({
                     type: 'post',
                     url: '/member/api/register',
@@ -57,33 +86,17 @@
                     contentType: 'application/json',
                     dataType: 'json',
                     success: function (response) {
-                        if(response.isExists) {
+                        if (response.isExists) {
+                            $('#error-email').text('Email already Exists. Please try another Email.').removeAttr('hidden');
+                        } else {
                             $('.form-register').submit();
-                        }else {
-                            $('#error-email').text('Email already Exists. Please try another Email.');
                         }
                     },
                     error: function () {
                         console.log('AJAX Error...');
                     }
                 });
-            }
-            return false;
 
-            if(!password) {
-                $('#error-password').show();
-            }else {
-                $('#error-password').hide();
-            }
-            if(!name) {
-                $('#error-name').show();
-            }else {
-                $('#error-name').hide();
-            }
-            if(!phone) {
-                $('#error-phone').show();
-            }else {
-                $('#error-phone').hide();
             }
         }
     </script>

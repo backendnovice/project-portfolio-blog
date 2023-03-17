@@ -50,6 +50,6 @@ public class MemberServiceImpl implements MemberService {
     public boolean validateRegisterAPI(MemberDTO memberDTO) {
         boolean isExists = memberRepository.existsByEmail(memberDTO.getEmail());
         
-        return !isExists;
+        return isExists;
     }
 }
