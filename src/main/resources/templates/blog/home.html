@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layout/common :: html-head}">
     <title>Home</title>
 </head>
 <body>
     <div class="container">
         <h1>Welcome to Portfolio-Blog</h1>
+        <a sec:authorize="hasRole('ROLE_USER')" th:href="@{~/member/modify}">Modify</a>
     </div>
 </body>
 </html>
