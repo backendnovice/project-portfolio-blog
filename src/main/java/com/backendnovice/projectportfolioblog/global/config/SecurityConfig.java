@@ -1,6 +1,5 @@
 package com.backendnovice.projectportfolioblog.global.config;
 
-import com.backendnovice.projectportfolioblog.global.enums.Role;
 import com.backendnovice.projectportfolioblog.member.service.MemberDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,14 +34,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/blog/**").hasRole("USER")
+                        .requestMatchers("/blog/**", "/member/modify", "member/withdraw").hasRole("USER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/layout/**", "/member/**").permitAll()
                 )
                 .formLogin((login) -> login
                         .loginPage("/member/login")
-                        .loginProcessingUrl("/member/login")
-                        .defaultSuccessUrl("/blog/home")
+                        .successHandler((request, response, authentication) -> {
+                            response.sendRedirect("/blog/home");
+                        })
                         .failureUrl("/member/login")
                         .permitAll()
                 )
