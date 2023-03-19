@@ -34,7 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/blog/**", "/member/modify", "member/withdraw").hasRole("USER")
+                        .requestMatchers("/blog/**", "/member/modify", "member/help/**").hasRole("USER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/layout/**", "/member/**").permitAll()
                 )
@@ -47,7 +47,8 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout((logout) -> logout
-                        .logoutSuccessUrl("/member/logout")
+                        .logoutUrl("/member/logout")
+                        .logoutSuccessUrl("/member/login")
                         .permitAll()
                 );
     
