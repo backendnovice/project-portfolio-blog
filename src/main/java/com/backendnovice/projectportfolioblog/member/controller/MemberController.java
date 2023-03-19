@@ -43,7 +43,24 @@ public class MemberController {
     
     @GetMapping("/modify")
     public String modifyForm() {
-        return "member/modify";
+        return "/member/modify";
+    }
+    
+    @GetMapping("/help/password")
+    public String changePasswordForm() {
+        return "/member/help/password";
+    }
+    
+    @PostMapping("/help/password")
+    public String changePasswordProcess(MemberDTO memberDTO) {
+        memberService.memberChangePassword(memberDTO);
+        
+        return "/member/logout";
+    }
+    
+    @GetMapping("/help/withdraw")
+    public String withdrawForm() {
+        return "/member/help/withdraw";
     }
     
 }

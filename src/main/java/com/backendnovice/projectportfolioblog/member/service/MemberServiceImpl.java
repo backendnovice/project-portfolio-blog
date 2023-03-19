@@ -37,6 +37,15 @@ public class MemberServiceImpl implements MemberService {
     }
     
     @Override
+    public void memberChangePassword(MemberDTO memberDTO) {
+        MemberEntity member = memberRepository.findByEmail(memberDTO.getEmail()).get();
+        
+        member.builder().password(passwordEncoder.encode(memberDTO.getPassword()));
+        
+        memberRepository.save(member);
+    }
+    
+    @Override
     public boolean validateLoginAPI(MemberDTO memberDTO) {
         MemberEntity member = memberRepository.findByEmail(memberDTO.getEmail()).get();
         
@@ -51,5 +60,12 @@ public class MemberServiceImpl implements MemberService {
         boolean isExists = memberRepository.existsByEmail(memberDTO.getEmail());
         
         return isExists;
+    }
+    
+    @Override
+    public boolean validatePasswordAPI(MemberDTO memberDTO) {
+        boolean isMatch = memberRepository.existsByEmailAndPassword(memberDTO.getEmail(), memberDTO.getPassword());
+        
+        return isMatch;
     }
 }

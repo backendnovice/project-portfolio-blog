@@ -4,11 +4,9 @@ import com.backendnovice.projectportfolioblog.member.dto.MemberDTO;
 import com.backendnovice.projectportfolioblog.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +35,19 @@ public class MemberRestController {
         boolean isExists = memberService.validateRegisterAPI(memberDTO);
         
         response.put("isExists", isExists);
+        
+        return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/password")
+    public ResponseEntity<Map<String, Boolean>> providePasswordAPI(@RequestBody MemberDTO memberDTO, Principal principal) {
+        Map<String, Boolean> response = new HashMap<>();
+        
+        memberDTO.setEmail(principal.getName());
+        
+        boolean isMatch = memberService.validatePasswordAPI(memberDTO);
+        
+        response.put("isMatch", isMatch);
         
         return ResponseEntity.ok(response);
     }

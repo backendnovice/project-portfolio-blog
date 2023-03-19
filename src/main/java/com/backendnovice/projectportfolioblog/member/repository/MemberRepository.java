@@ -19,7 +19,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     
     Optional<MemberEntity> findByEmail(@Param("m_email") String email);
     
-    Optional<MemberEntity> findByEmailAndPassword(@Param("m_email") String email, @Param("m_password") String password);
+    boolean existsByEmailAndPassword(@Param("m_email") String email, @Param("m_password") String password);
     
     boolean existsByEmail(@Param("m_email") String email);
     

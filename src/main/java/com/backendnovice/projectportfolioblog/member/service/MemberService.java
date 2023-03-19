@@ -15,9 +15,13 @@ public interface MemberService {
     
     void memberRegister(MemberDTO memberDTO);
     
+    void memberChangePassword(MemberDTO memberDTO);
+    
     boolean validateLoginAPI(MemberDTO memberDTO);
     
     boolean validateRegisterAPI(MemberDTO memberDTO);
+    
+    boolean validatePasswordAPI(MemberDTO memberDTO);
     
     default MemberEntity dtoToEntity(MemberDTO memberDTO) {
         MemberEntity member = MemberEntity.builder()
