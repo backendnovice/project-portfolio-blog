@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @name   : MemberServiceImpl
@@ -45,6 +46,12 @@ public class MemberServiceImpl implements MemberService {
         member.setPassword(passwordEncoded);
         
         memberRepository.save(member);
+    }
+    
+    @Override
+    @Transactional
+    public void memberWithdraw(String email) {
+        memberRepository.deleteByEmail(email);
     }
     
     @Override

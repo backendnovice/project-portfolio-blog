@@ -4,6 +4,7 @@ import com.backendnovice.projectportfolioblog.member.dto.MemberDTO;
 import com.backendnovice.projectportfolioblog.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,8 +64,12 @@ public class MemberController {
     }
     
     @GetMapping("/help/withdraw")
-    public String withdrawForm() {
-        return "/member/help/withdraw";
+    public String withdrawForm(Principal principal) {
+        memberService.memberWithdraw(principal.getName());
+        
+        SecurityContextHolder.clearContext();
+        
+        return "redirect:/member/logout";
     }
     
 }

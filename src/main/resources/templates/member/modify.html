@@ -8,8 +8,26 @@
 <body>
     <div class="container">
         <h1>Welcome to Modify Page</h1>
-        <a sec:authorize="hasRole('ROLE_USER')" th:href="@{~/member/help/password}">Change your Password</a>
-        <a sec:authorize="hasRole('ROLE_USER')" th:href="@{~/member/help/withdraw}">Withdrawal your Account</a>
+        <a sec:authorize="hasRole('ROLE_USER')" id="btn-change" th:href="@{~/member/help/password}">Change your Password</a>
+        <a sec:authorize="hasRole('ROLE_USER')" id="btn-withdraw">Withdrawal your Account</a>
     </div>
+
+    <script>
+        $(function () {
+            $('#btn-withdraw').click(function() {
+                withdraw();
+            });
+        });
+
+        function withdraw() {
+            let answer = confirm('Really want withdraw?');
+
+            if(answer) {
+                location.replace('/member/help/withdraw');
+            }
+        }
+
+        //th:href="@{~/member/help/withdraw}"
+    </script>
 </body>
 </html>

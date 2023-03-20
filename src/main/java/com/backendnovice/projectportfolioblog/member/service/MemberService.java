@@ -17,6 +17,8 @@ public interface MemberService {
     
     void memberChangePassword(MemberDTO memberDTO);
     
+    void memberWithdraw(String email);
+    
     boolean validateLoginAPI(MemberDTO memberDTO);
     
     boolean validateRegisterAPI(MemberDTO memberDTO);
