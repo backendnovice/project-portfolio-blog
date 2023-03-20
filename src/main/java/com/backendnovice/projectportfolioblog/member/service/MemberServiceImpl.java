@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
     public void memberChangePassword(MemberDTO memberDTO) {
         MemberEntity member = memberRepository.findByEmail(memberDTO.getEmail()).get();
         
-        member.builder().password(passwordEncoder.encode(memberDTO.getPassword()));
+        member.builder().password(passwordEncoder.encode(memberDTO.getPassword())).build();
         
         memberRepository.save(member);
     }
@@ -64,7 +64,9 @@ public class MemberServiceImpl implements MemberService {
     
     @Override
     public boolean validatePasswordAPI(MemberDTO memberDTO) {
-        boolean isMatch = memberRepository.existsByEmailAndPassword(memberDTO.getEmail(), memberDTO.getPassword());
+        MemberEntity member = memberRepository.findByEmail(memberDTO.getEmail()).get();
+        
+        boolean isMatch = passwordEncoder.matches(memberDTO.getPassword(), member.getPassword());
         
         return isMatch;
     }

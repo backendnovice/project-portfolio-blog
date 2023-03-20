@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 /**
  * @name   : MemberController
  * @author : Juwon
@@ -52,10 +54,12 @@ public class MemberController {
     }
     
     @PostMapping("/help/password")
-    public String changePasswordProcess(MemberDTO memberDTO) {
+    public String changePasswordProcess(MemberDTO memberDTO, Principal principal) {
+        memberDTO.setEmail(principal.getName());
+        
         memberService.memberChangePassword(memberDTO);
         
-        return "/member/logout";
+        return "redirect:/member/logout";
     }
     
     @GetMapping("/help/withdraw")
