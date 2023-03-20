@@ -3,10 +3,7 @@ package com.backendnovice.projectportfolioblog.member.domain;
 import com.backendnovice.projectportfolioblog.global.domain.DateEntity;
 import com.backendnovice.projectportfolioblog.global.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * @name   : Member
@@ -18,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "member")

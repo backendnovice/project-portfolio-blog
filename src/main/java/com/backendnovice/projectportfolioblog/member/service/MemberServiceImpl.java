@@ -40,7 +40,9 @@ public class MemberServiceImpl implements MemberService {
     public void memberChangePassword(MemberDTO memberDTO) {
         MemberEntity member = memberRepository.findByEmail(memberDTO.getEmail()).get();
         
-        member.builder().password(passwordEncoder.encode(memberDTO.getPassword())).build();
+        String passwordEncoded = passwordEncoder.encode(memberDTO.getPassword());
+        
+        member.setPassword(passwordEncoded);
         
         memberRepository.save(member);
     }
