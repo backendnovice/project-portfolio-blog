@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
  * @name   : SecurityConfig
@@ -30,13 +31,23 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     
+    private static final String[] LINKS_USER = {"/blog/**", "/member/profile", "/member/api/password", "/member/support/**", "/member/logout"};
+    
+    private static final String[] LINKS_ADMIN = {"/member/admin/**", "/member/support/**"};
+    
+    private static final String[] LINKS_PUBLIC = {"/member/login", "/member/api/login", "/member/register", "/member/api/register", "/blog/home"};
+    
+    private static final String[] LINKS_RESOURCE = {"/layout/**", "/css/**", "/js/**"};
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/blog/**", "/member/modify", "member/help/**").hasRole("USER")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/layout/**", "/member/**").permitAll()
+                        .requestMatchers(LINKS_USER).hasRole("USER")
+                        .requestMatchers(LINKS_ADMIN).hasRole("ADMIN")
+                        .requestMatchers(LINKS_PUBLIC).anonymous()
+                        .requestMatchers(LINKS_RESOURCE).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin((login) -> login
                         .loginPage("/member/login")
@@ -69,8 +80,5 @@ public class SecurityConfig {
         return provider;
     }
     
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**");
-    }
+    
 }
