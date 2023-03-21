@@ -16,7 +16,7 @@ public class MemberRestController {
     
     @Autowired
     private MemberService memberService;
-    
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, Boolean>> provideLoginAPI(@RequestBody MemberDTO memberDTO) {
         Map<String, Boolean> response = new HashMap<>();

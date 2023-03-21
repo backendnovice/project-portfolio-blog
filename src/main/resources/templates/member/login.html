@@ -33,7 +33,7 @@
             let password = $('#password').val();
 
             if(!email || !password) {
-                $('.text-danger').text('Null ID or Password. Please try again.');
+                $('.text-danger').text('Blank ID or Password.');
             }
             else {
                 $.ajax({
@@ -49,11 +49,11 @@
                         if(response.isValid) {
                             $('.form-login').submit();
                         }else {
-                            $('.text-danger').text('Invalid ID or Password. Please try again.');
+                            $('.text-danger').text('Invalid ID or Password.');
                         }
                     },
                     error: function () {
-                        $('.text-danger').text('Invalid ID or Password. Please try again.');
+                        $('.text-danger').text('Something Error Occurred.');
                     }
                 });
             }

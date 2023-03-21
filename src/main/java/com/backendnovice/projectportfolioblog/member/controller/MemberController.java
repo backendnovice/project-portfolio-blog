@@ -28,13 +28,23 @@ public class MemberController {
     private MemberService memberService;
     
     @GetMapping("/login")
-    public String loginForm() {
+    public String mappingLoginForm() {
         return "/member/login";
     }
     
     @GetMapping("/register")
-    public String registerForm() {
+    public String mappingRegisterForm() {
         return "/member/register";
+    }
+    
+    @GetMapping("/profile")
+    public String mappingProfileForm() {
+        return "/member/profile";
+    }
+    
+    @GetMapping("/support/password")
+    public String mappingChangePasswordForm() {
+        return "/member/support/password";
     }
     
     @PostMapping("/register")
@@ -44,17 +54,7 @@ public class MemberController {
         return "/member/login";
     }
     
-    @GetMapping("/modify")
-    public String modifyForm() {
-        return "/member/modify";
-    }
-    
-    @GetMapping("/help/password")
-    public String changePasswordForm() {
-        return "/member/help/password";
-    }
-    
-    @PostMapping("/help/password")
+    @PostMapping("/support/password")
     public String changePasswordProcess(MemberDTO memberDTO, Principal principal) {
         memberDTO.setEmail(principal.getName());
         
@@ -63,8 +63,8 @@ public class MemberController {
         return "redirect:/member/logout";
     }
     
-    @GetMapping("/help/withdraw")
-    public String withdrawForm(Principal principal) {
+    @GetMapping("/support/withdraw")
+    public String withdrawProcess(Principal principal) {
         memberService.memberWithdraw(principal.getName());
         
         SecurityContextHolder.clearContext();
