@@ -49,27 +49,19 @@ public class MemberController {
     
     @PostMapping("/register")
     public String registerProcess(MemberDTO memberDTO) {
-        memberService.memberRegister(memberDTO);
-        
-        return "/member/login";
+        return memberService.register(memberDTO);
     }
     
     @PostMapping("/support/password")
     public String changePasswordProcess(MemberDTO memberDTO, Principal principal) {
         memberDTO.setEmail(principal.getName());
         
-        memberService.memberChangePassword(memberDTO);
-        
-        return "redirect:/member/logout";
+        return memberService.changePassword(memberDTO);
     }
     
     @GetMapping("/support/withdraw")
     public String withdrawProcess(Principal principal) {
-        memberService.memberWithdraw(principal.getName());
-        
-        SecurityContextHolder.clearContext();
-        
-        return "redirect:/member/logout";
+        return memberService.withdraw(principal.getName());
     }
     
 }

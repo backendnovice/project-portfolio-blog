@@ -39,6 +39,8 @@
             });
         });
 
+        const regexp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
         function validate() {
             let email = $('#email').val();
             let password = $('#password').val();
@@ -58,21 +60,26 @@
                 $('#error-password').removeAttr('hidden');
                 hasError = true;
             }else {
-                $('#error-password').hide().attr('hidden');
+                if(!regexp.test(password)) {
+                    $('#error-password').text('Password must Contain 8 or more, lowercase, uppercase, special characters.').removeAttr('hidden');
+                    hasError = true;
+                }else {
+                    $('#error-password').attr('hidden');
+                }
             }
 
             if(!name) {
                 $('#error-name').removeAttr('hidden');
                 hasError = true;
             }else {
-                $('#error-name').hide().attr('hidden');
+                $('#error-name').attr('hidden');
             }
 
             if(!phone) {
                 $('#error-phone').removeAttr('hidden');
                 hasError = true;
             }else {
-                $('#error-phone').hide().attr('hidden');
+                $('#error-phone').attr('hidden');
             }
 
             if(!hasError) {
@@ -92,7 +99,7 @@
                         }
                     },
                     error: function () {
-                        console.log('AJAX Error...');
+                        console.log('Something Error occurred.');
                     }
                 });
             }

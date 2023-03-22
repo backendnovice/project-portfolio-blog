@@ -1,18 +1,17 @@
 package com.backendnovice.projectportfolioblog.member.service;
 
-import com.backendnovice.projectportfolioblog.member.domain.MemberDetails;
 import com.backendnovice.projectportfolioblog.member.domain.MemberEntity;
 import com.backendnovice.projectportfolioblog.member.dto.MemberDTO;
 import com.backendnovice.projectportfolioblog.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @name   : MemberServiceImpl
@@ -31,27 +30,46 @@ public class MemberServiceImpl implements MemberService {
     private PasswordEncoder passwordEncoder;
     
     @Override
-    public void memberRegister(MemberDTO memberDTO) {
-        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
+    public String register(MemberDTO memberDTO) {
+        String password = memberDTO.getPassword();
         
-        memberRepository.save(dtoToEntity(memberDTO));
+        if(checkPasswordPattern(password)) {
+            memberDTO.setPassword(passwordEncoder.encode(password));
+            
+            memberRepository.save(dtoToEntity(memberDTO));
+            
+            return "redirect:/member/login";
+        }
+        
+        return "redirect:/member/register";
     }
     
     @Override
-    public void memberChangePassword(MemberDTO memberDTO) {
-        MemberEntity member = memberRepository.findByEmail(memberDTO.getEmail()).get();
+    public String changePassword(MemberDTO memberDTO) {
+        String email = memberDTO.getEmail();
+        String password = memberDTO.getPassword();
         
-        String passwordEncoded = passwordEncoder.encode(memberDTO.getPassword());
+        if(checkPasswordPattern(password)) {
+            MemberEntity member = memberRepository.findByEmail(email).get();
+            
+            member.setEmail(passwordEncoder.encode(password));
+            
+            memberRepository.save(member);
+            
+            return "redirect:/member/logout";
+        }
         
-        member.setPassword(passwordEncoded);
-        
-        memberRepository.save(member);
+        return "redirect:/member/profile";
     }
     
     @Override
     @Transactional
-    public void memberWithdraw(String email) {
+    public String withdraw(String email) {
         memberRepository.deleteByEmail(email);
+    
+        SecurityContextHolder.clearContext();
+        
+        return "redirect:/member/logout";
     }
     
     @Override
@@ -78,5 +96,16 @@ public class MemberServiceImpl implements MemberService {
         boolean isMatch = passwordEncoder.matches(memberDTO.getPassword(), member.getPassword());
         
         return isMatch;
+    }
+    
+    private boolean checkPasswordPattern(String password) {
+        Pattern pattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
+        
+        Matcher matcher = pattern.matcher(password);
+        
+        if(!matcher.find())
+            return false;
+        else
+            return true;
     }
 }

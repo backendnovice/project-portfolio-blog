@@ -13,11 +13,11 @@ import com.backendnovice.projectportfolioblog.member.dto.MemberDTO;
 
 public interface MemberService {
     
-    void memberRegister(MemberDTO memberDTO);
+    String register(MemberDTO memberDTO);
     
-    void memberChangePassword(MemberDTO memberDTO);
+    String changePassword(MemberDTO memberDTO);
     
-    void memberWithdraw(String email);
+    String withdraw(String email);
     
     boolean validateLoginAPI(MemberDTO memberDTO);
     
