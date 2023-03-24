@@ -25,6 +25,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 	implementation("com.oracle.database.jdbc:ojdbc8:21.9.0.0")
+	implementation("org.springframework.boot:spring-boot-starter-mail:3.0.5")
+	implementation("org.springframework:spring-context-support:6.0.7")
 
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
