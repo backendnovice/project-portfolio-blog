@@ -6,27 +6,36 @@
 <body>
     <div class="container">
         <form th:method="post" class="form-register" th:action="@{~/member/register}">
-            <div>
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="example@email.com">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="example@email.com">
                 <span class="text-danger" id="error-email" hidden></span>
             </div>
-            <div>
+            <div class="mb-3">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="password">
                 <span class="text-danger" id="error-password" hidden>Null Password.</span>
             </div>
-            <div>
+            <div class="mb-3">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" placeholder="Name">
                 <span class="text-danger" id="error-name" hidden>Null Name.</span>
             </div>
-            <div>
+            <div class="mb-3">
                 <label for="phone">Phone</label>
                 <input type="tel" id="phone" name="phone" placeholder="enter without '-'" minlength="10" maxlength="11">
                 <span class="text-danger" id="error-phone" hidden>Null Phone.</span>
             </div>
-            <div>
+            <div class="mb-3">
+                <label for="number">Verify</label>
+                <input type="text" id="number" name="number" placeholder="111111 ~ 999999" maxlength="6">
+                <span class="text-danger" id="error-number" hidden></span>
+                <div>
+                    <button class="btn-secondary" type="button" id="btn-send">Send</button>
+                    <button class="btn-secondary" type="button" id="btn-verify">Verify</button>
+                </div>
+            </div>
+            <div class="mb-2">
                 <button type="button" id="btn-submit">Register</button>
             </div>
         </form>
@@ -34,14 +43,70 @@
 
     <script>
         $(function () {
+            $('#btn-send').click(function () {
+                send();
+            });
+
+            $('#btn-verify').click(function () {
+                validateMail();
+            });
+
             $('#btn-submit').click(function() {
-                validate();
+                validateForm();
             });
         });
 
         const regexp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
-        function validate() {
+        let isNumberValid = false;
+        let numberEncrypt;
+        let numberDecrypt;
+
+        function send() {
+            $.ajax({
+                type: 'post',
+                url: '/member/api/register/email/generate',
+                data: JSON.stringify({
+                    email: email
+                }),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    numberEncrypt = response.number;
+                },
+                error: function () {
+                    alert('Something Error occurred.');
+                }
+            });
+        }
+
+        function validateMail() {
+            numberDecrypt = $('#number').val();
+
+            $.ajax({
+                type: 'post',
+                url: '/member/api/register/email/validate',
+                data: JSON.stringify({
+                    numberEncrypt: numberEncrypt,
+                    numberDecrypt: number
+                }),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    if(response.isValid) {
+                        isNumberValid = true;
+                    }else {
+                        isNumberValid = false;
+                    }
+                },
+                error: function () {
+                    alert('Something Error occurred.');
+                }
+
+            });
+        }
+
+        function validateForm() {
             let email = $('#email').val();
             let password = $('#password').val();
             let name = $('#name').val();
@@ -82,7 +147,7 @@
                 $('#error-phone').attr('hidden');
             }
 
-            if(!hasError) {
+            if(!hasError && !isNumberValid) {
                 $.ajax({
                     type: 'post',
                     url: '/member/api/register',

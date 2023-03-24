@@ -1,5 +1,7 @@
 package com.backendnovice.projectportfolioblog.member.controller;
 
+import com.backendnovice.projectportfolioblog.email.dto.EmailDTO;
+import com.backendnovice.projectportfolioblog.email.service.EmailService;
 import com.backendnovice.projectportfolioblog.member.dto.MemberDTO;
 import com.backendnovice.projectportfolioblog.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ public class MemberRestController {
     
     @Autowired
     private MemberService memberService;
+    
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Boolean>> provideLoginAPI(@RequestBody MemberDTO memberDTO) {
@@ -35,6 +40,28 @@ public class MemberRestController {
         boolean isExists = memberService.validateRegisterAPI(memberDTO);
         
         response.put("isExists", isExists);
+        
+        return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/register/email/generate")
+    public ResponseEntity<Map<String, String>> sendEmailAPI(@RequestBody EmailDTO emailDTO) {
+        Map<String, String> response = new HashMap<>();
+        
+        String numberGenerated = emailService.sendRegisterMail(emailDTO);
+        
+        response.put("numberGenerated", numberGenerated);
+        
+        return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/register/email/validate")
+    public ResponseEntity<Map<String, Boolean>> validateEmailAPI(@RequestBody EmailDTO emailDTO) {
+        Map<String, Boolean> response = new HashMap<>();
+        
+        boolean isVerified = emailService.validateRandomNumber(emailDTO);
+        
+        response.put("isVerified", isVerified);
         
         return ResponseEntity.ok(response);
     }
